@@ -1,0 +1,13 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    background-image: linear-gradient(purple,blue);
+}
+.incorrect{
+    color: red;
+}
+.correct{
+    color: green;
+}
