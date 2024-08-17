@@ -1,4 +1,4 @@
-import { MouseEvent, useState, useEffect } from "react";
+import { MouseEvent, useState, useEffect, useRef } from "react";
 import { questions } from "../assets/Data";
 import './Quiz.css';
 
@@ -11,6 +11,8 @@ const Quiz = () => {
   const [isOptionClicked, setIsOptionClicked] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
   const [isQuizCompleted, setIsQuizCompleted] = useState<boolean>(false);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     const shuffledOptions = shuffleOptions([
@@ -21,7 +23,18 @@ const Quiz = () => {
     setSelectedOption(null); // Reset selected option for new question
     setCorrectOptionIndex(shuffledOptions.indexOf(Question.correctanswer)); // Track correct option index
     setIsOptionClicked(false); // Reset option clicked state for new question
+    setTimeLeft(30); // Reset timer for new question
   }, [Question]);
+
+  useEffect(() => {
+    if (timeLeft === 0) {
+      nextQuestion();
+    }
+    timerRef.current = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timerRef.current!);
+  }, [timeLeft]);
 
   const shuffleOptions = (options: string[]) => {
     for (let i = options.length - 1; i > 0; i--) {
@@ -38,6 +51,7 @@ const Quiz = () => {
       if (e.currentTarget.textContent === Question.correctanswer) {
         setScore(score + 1);
       }
+      clearInterval(timerRef.current!); // Stop the timer when an option is clicked
     }
   };
 
@@ -71,6 +85,7 @@ const Quiz = () => {
       ) : (
         <>
           <p>{index + 1}. {Question.question}</p>
+          <p>Time left: {timeLeft} seconds</p> {/* Display the timer */}
           <div className="options">
             {options.map((option, idx) => (
               <button
