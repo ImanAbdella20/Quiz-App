@@ -12,6 +12,7 @@ const Quiz = () => {
   const [score, setScore] = useState<number>(0);
   const [isQuizCompleted, setIsQuizCompleted] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState(30);
+  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null); // Add state for feedback message
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -24,6 +25,7 @@ const Quiz = () => {
     setCorrectOptionIndex(shuffledOptions.indexOf(Question.correctanswer)); // Track correct option index
     setIsOptionClicked(false); // Reset option clicked state for new question
     setTimeLeft(30); // Reset timer for new question
+    setFeedbackMessage(null); // Reset feedback message for new question
   }, [Question]);
 
   useEffect(() => {
@@ -46,10 +48,14 @@ const Quiz = () => {
 
   const checkAnswer = (e: MouseEvent<HTMLButtonElement>) => {
     if (!isOptionClicked) {
-      setSelectedOption(e.currentTarget.textContent);
+      const selected = e.currentTarget.textContent;
+      setSelectedOption(selected);
       setIsOptionClicked(true);
-      if (e.currentTarget.textContent === Question.correctanswer) {
+      if (selected === Question.correctanswer) {
         setScore(score + 1);
+        setFeedbackMessage("Correct!"); // Set feedback message for correct answer
+      } else {
+        setFeedbackMessage("Incorrect!"); // Set feedback message for incorrect answer
       }
       clearInterval(timerRef.current!); // Stop the timer when an option is clicked
     }
@@ -106,6 +112,7 @@ const Quiz = () => {
               </button>
             ))}
           </div>
+          {feedbackMessage && <p className="feedback">{feedbackMessage}</p>} {/* Display feedback message */}
           <div className="navigation-buttons">
             {index > 0 && (
               <button type="button" onClick={previousQuestion}>PREVIOUS</button>
