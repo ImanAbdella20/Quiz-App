@@ -1,10 +1,11 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import Quiz from './component/Quiz'
-import './index.css'
-import './component/App.css'
-ReactDOM.createRoot(document.getElementById('root')!).render(
+// src/index.tsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+
+ReactDOM.render(
   <React.StrictMode>
-     <Quiz/>  
+    <App />
   </React.StrictMode>,
-)
+  document.getElementById('root')
+);

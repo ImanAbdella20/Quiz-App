@@ -1,10 +1,14 @@
+
 import { MouseEvent, useState, useEffect, useRef } from "react";
+import { useParams } from 'react-router-dom';
 import { questions } from "../assets/Data";
 import './Quiz.css';
 
 const Quiz = () => {
+  const { level } = useParams<{ level: string }>();
+  const levelQuestions = questions.find(q => q.level === parseInt(level!))?.questions || [];
   const [index, setIndex] = useState(0);
-  const [Question, setQuestion] = useState(questions[index]);
+  const [Question, setQuestion] = useState(levelQuestions[index]);
   const [options, setOptions] = useState<string[]>([]);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [correctOptionIndex, setCorrectOptionIndex] = useState<number | null>(null);
@@ -12,7 +16,7 @@ const Quiz = () => {
   const [score, setScore] = useState<number>(0);
   const [isQuizCompleted, setIsQuizCompleted] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState(30);
-  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null); // Add state for feedback message
+  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -21,11 +25,11 @@ const Quiz = () => {
       Question.correctanswer
     ]);
     setOptions(shuffledOptions);
-    setSelectedOption(null); // Reset selected option for new question
-    setCorrectOptionIndex(shuffledOptions.indexOf(Question.correctanswer)); // Track correct option index
-    setIsOptionClicked(false); // Reset option clicked state for new question
-    setTimeLeft(30); // Reset timer for new question
-    setFeedbackMessage(null); // Reset feedback message for new question
+    setSelectedOption(null);
+    setCorrectOptionIndex(shuffledOptions.indexOf(Question.correctanswer));
+    setIsOptionClicked(false);
+    setTimeLeft(30);
+    setFeedbackMessage(null);
   }, [Question]);
 
   useEffect(() => {
@@ -53,19 +57,19 @@ const Quiz = () => {
       setIsOptionClicked(true);
       if (selected === Question.correctanswer) {
         setScore(score + 1);
-        setFeedbackMessage("Correct!"); // Set feedback message for correct answer
+        setFeedbackMessage("Correct!");
       } else {
-        setFeedbackMessage("Incorrect!"); // Set feedback message for incorrect answer
+        setFeedbackMessage("Incorrect!");
       }
-      clearInterval(timerRef.current!); // Stop the timer when an option is clicked
+      clearInterval(timerRef.current!);
     }
   };
 
   const nextQuestion = () => {
     const newIndex = index + 1;
-    if (newIndex < questions.length) {
+    if (newIndex < levelQuestions.length) {
       setIndex(newIndex);
-      setQuestion(questions[newIndex]);
+      setQuestion(levelQuestions[newIndex]);
     } else {
       setIsQuizCompleted(true);
     }
@@ -75,7 +79,7 @@ const Quiz = () => {
     const newIndex = index - 1;
     if (newIndex >= 0) {
       setIndex(newIndex);
-      setQuestion(questions[newIndex]);
+      setQuestion(levelQuestions[newIndex]);
     }
   };
 
@@ -86,12 +90,12 @@ const Quiz = () => {
       {isQuizCompleted ? (
         <div className="result">
           <h2>Quiz Completed!</h2>
-          <p>Your score is: {score} out of {questions.length}</p>
+          <p>Your score is: {score} out of {levelQuestions.length}</p>
         </div>
       ) : (
         <>
           <p>{index + 1}. {Question.question}</p>
-          <p>Time left: {timeLeft} seconds</p> {/* Display the timer */}
+          <p>Time left: {timeLeft} seconds</p>
           <div className="options">
             {options.map((option, idx) => (
               <button
@@ -106,19 +110,15 @@ const Quiz = () => {
                     ? "correct"
                     : ""
                 }
-                disabled={isOptionClicked} // Disable button if an option is clicked
+                disabled={isOptionClicked}
               >
                 {option}
               </button>
             ))}
           </div>
-          {feedbackMessage && <p className="feedback">{feedbackMessage}</p>} {/* Display feedback message */}
-          <div className="navigation-buttons">
-            {index > 0 && (
-              <button type="button" onClick={previousQuestion}>PREVIOUS</button>
-            )}
-            <button type="button" onClick={nextQuestion}>NEXT</button>
-          </div>
+          {feedbackMessage && <p>{feedbackMessage}</p>}
+          <button onClick={previousQuestion} disabled={index === 0}>Previous</button>
+          <button onClick={nextQuestion} disabled={index === levelQuestions.length - 1}>Next</button>
         </>
       )}
     </div>
