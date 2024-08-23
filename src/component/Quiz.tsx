@@ -1,4 +1,3 @@
-
 import { MouseEvent, useState, useEffect, useRef } from "react";
 import { useParams } from 'react-router-dom';
 import { questions } from "../assets/Data";
@@ -122,7 +121,6 @@ const Quiz = () => {
         </>
       )}
     </div>
-  );
-};
-
-export default Quiz;
+  )
+}
+  export default Quiz;

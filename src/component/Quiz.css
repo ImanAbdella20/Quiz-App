@@ -3,3 +3,13 @@
     top: 35%;
     left: 35%;
 }
+.correct {
+    background-color: green;
+    color: white;
+  }
+  
+  .incorrect {
+    background-color: red;
+    color: white;
+  }
+  
