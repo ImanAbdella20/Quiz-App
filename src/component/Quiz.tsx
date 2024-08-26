@@ -83,44 +83,62 @@ const Quiz = () => {
   };
 
   return (
-    <div className="container">
-      <h4>Quiz App</h4>
-      <hr />
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4">
+      <button className="mb-4 px-4 py-2 bg-white text-indigo-500 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition duration-300">
+        Back to Quiz
+      </button>
+      <h4 className="text-3xl font-bold mb-4">Quiz App</h4>
+      <hr className="w-full mb-4 border-gray-300" />
       {isQuizCompleted ? (
-        <div className="result">
-          <h2>Quiz Completed!</h2>
-          <p>Your score is: {score} out of {levelQuestions.length}</p>
+        <div className="result text-center">
+          <h2 className="text-2xl font-bold mb-2">Quiz Completed!</h2>
+          <p className="text-lg">Your score is: {score} out of {levelQuestions.length}</p>
         </div>
       ) : (
         <>
-          <p>{index + 1}. {Question.question}</p>
-          <p>Time left: {timeLeft} seconds</p>
-          <div className="options">
+          <p className="text-lg mb-2">{index + 1}. {Question.question}</p>
+          <p className="text-lg mb-4">Time left: {timeLeft} seconds</p>
+          <div className="options grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 mb-4">
             {options.map((option, idx) => (
               <button
                 key={idx}
                 onClick={(e) => checkAnswer(e)}
-                className={
+                className={`px-4 py-2 rounded-lg shadow-md transition duration-300 ${
                   selectedOption === option
                     ? option === Question.correctanswer
-                      ? "correct"
-                      : "incorrect"
+                      ? "bg-green-500 text-white"
+                      : "bg-red-500 text-white"
                     : selectedOption && idx === correctOptionIndex
-                    ? "correct"
-                    : ""
-                }
+                    ? "bg-green-500 text-white"
+                    : "bg-white text-indigo-500 hover:bg-gray-100"
+                }`}
                 disabled={isOptionClicked}
               >
                 {option}
               </button>
             ))}
           </div>
-          {feedbackMessage && <p>{feedbackMessage}</p>}
-          <button onClick={previousQuestion} disabled={index === 0}>Previous</button>
-          <button onClick={nextQuestion} disabled={index === levelQuestions.length - 1}>Next</button>
+          {feedbackMessage && <p className="text-lg mb-4">{feedbackMessage}</p>}
+          <div className="flex justify-between w-full">
+            <button
+              onClick={previousQuestion}
+              disabled={index === 0}
+              className="px-4 py-2 bg-white text-indigo-500 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition duration-300 disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <button
+              onClick={nextQuestion}
+              disabled={index === levelQuestions.length - 1}
+              className="px-4 py-2 bg-white text-indigo-500 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition duration-300 disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
         </>
       )}
     </div>
-  )
-}
-  export default Quiz;
+  );
+};
+
+export default Quiz;
