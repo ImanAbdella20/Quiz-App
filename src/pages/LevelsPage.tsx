@@ -16,6 +16,11 @@ const LevelsPage = () => {
           </Link>
         ))}
       </div>
+      <Link to="/">
+        <button className="mt-20 px-6 py-3 bg-white text-green-500 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition duration-300">
+          Back to Home
+        </button>
+      </Link>
     </div>
   );
 };

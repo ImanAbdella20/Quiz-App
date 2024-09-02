@@ -1,6 +1,7 @@
 import { MouseEvent, useState, useEffect, useRef } from "react";
 import { useParams } from 'react-router-dom';
 import { questions } from "../assets/Data";
+import { useNavigate } from 'react-router-dom';
 import './Quiz.css';
 
 const Quiz = () => {
@@ -17,6 +18,7 @@ const Quiz = () => {
   const [timeLeft, setTimeLeft] = useState(30);
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const shuffledOptions = shuffleOptions([
@@ -84,7 +86,10 @@ const Quiz = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4">
-      <button className="mb-4 px-4 py-2 bg-white text-indigo-500 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition duration-300">
+      <button
+        className="mb-4 px-4 py-2 bg-white text-indigo-500 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition duration-300"
+        onClick={() => navigate('/levels')}
+      >
         Back to Quiz
       </button>
       <h4 className="text-3xl font-bold mb-4">Quiz App</h4>
